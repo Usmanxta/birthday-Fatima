@@ -78,7 +78,7 @@ function detectBlow() {
   const volume =
     dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
 
-  if (volume > 150) {
+  if (volume > 90) {
     candleOff();
     return;
   }
@@ -239,4 +239,42 @@ if (typeof gsap !== "undefined") {
   });
 }
 
+const reels = document.querySelectorAll(".reel");
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    });
+  },
+  {
+    threshold: 0.6
+  }
+);
+
+reels.forEach((video) => {
+  observer.observe(video);
+});
+
+// Lazy-load images (polaroid pics)
+const imgObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      const src = img.getAttribute('data-src');
+      if (src) {
+        img.src = src;
+        img.removeAttribute('data-src');
+      }
+      imgObserver.unobserve(img);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('img[data-src]').forEach(img => imgObserver.observe(img));
 

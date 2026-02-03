@@ -379,3 +379,110 @@ button:disabled {
 .cake {
   box-shadow: 0 0 20px rgba(255, 120, 180, 0.5);
 }
+.reels-section {
+  padding: 100px 20px;
+  text-align: center;
+}
+
+.reels-section h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+}
+
+.reels-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 20px;
+  justify-content: center;
+}
+
+.reel {
+  width: 220px;
+  height: 390px;
+  border-radius: 18px;
+  object-fit: cover;
+  scroll-snap-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  background: black;
+  flex-shrink: 0;
+}
+
+.reel {
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.reel:hover {
+  transform: scale(1.03);
+  box-shadow: 0 20px 60px rgba(255,105,180,0.4);
+}
+
+/* Photo frames (polaroid style) */
+.photo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  padding: 20px 10px;
+}
+
+/* make frames portrait by default */
+.photo-frame {
+  position: relative;
+  width: 220px;               /* fixed portrait card width */
+  background: #fff;
+  padding: 12px 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 300ms ease, box-shadow 300ms ease;
+  -webkit-backface-visibility: hidden;
+  overflow: visible;
+}
+
+.photo-frame img,
+.photo-frame video {
+  width: 100%;
+  aspect-ratio: 3 / 4;        /* portrait aspect */
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  background: #f3f3f3;
+}
+
+/* small caption area like a polaroid mat */
+.photo-frame figcaption {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 10px;
+  text-align: left;
+}
+
+/* pin at the top center */
+.photo-frame::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  background: radial-gradient(circle at 35% 30%, #fff 0 18%, transparent 19%), #e63946;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 5;
+}
+
+/* hover lift */
+.photo-frame:hover {
+  transform: translateY(-6px) rotate(var(--rot, 0deg)) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* mobile: full width frames */
+@media (max-width: 600px) {
+  .photo-frame { width: calc(100% - 24px); }
+  .photo-frame img, .photo-frame video { aspect-ratio: 3 / 4; }
+}
