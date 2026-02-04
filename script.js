@@ -548,8 +548,21 @@ function handleAvatarsOnScroll() {
 
   // compute horizontal offset in pixels (how much they should move toward center)
   const margin = 80; // keep some margin from exact center
-  const halfWidth = window.innerWidth / 2;
-  const moveDistance = Math.max(halfWidth - margin - 60, 40); // px
+  const vw = window.innerWidth;
+  const halfWidth = vw / 2;
+
+  // make avatars move closer on small screens: increase moveDistance proportionally
+  let moveDistance;
+  if (vw <= 420) {
+    // mobile narrow: move nearly to center (small gap)
+    moveDistance = Math.max(halfWidth - 40, 60);
+  } else if (vw <= 768) {
+    // tablet: moderate approach
+    moveDistance = Math.max(halfWidth - 60, 80);
+  } else {
+    // desktop: keep some margin
+    moveDistance = Math.max(halfWidth - margin - 60, 40);
+  }
 
   const leftX = progress * moveDistance; // move right
   const rightX = -progress * moveDistance; // move left
@@ -562,9 +575,16 @@ function handleAvatarsOnScroll() {
     gsap.to(avatarRightContainer, { x: rightX, y: -lift, duration: 0.45, ease: 'power2.out' });
   }
 
-  // When very near bottom, trigger meeting once
-  if (!haveMet && progress >= 0.96) {
-    triggerMeeting();
+  // check actual distance between containers (after transform applied)
+  if (!haveMet && avatarLeftContainer && avatarRightContainer) {
+    const leftRect = avatarLeftContainer.getBoundingClientRect();
+    const rightRect = avatarRightContainer.getBoundingClientRect();
+    const gap = rightRect.left - leftRect.right;
+
+    // if they are visually close enough, trigger meeting
+    if (gap < 80 || progress >= 0.98) {
+      triggerMeeting();
+    }
   }
 }
 
@@ -593,8 +613,13 @@ if (typeof gsap !== 'undefined' && gsap.utils && gsap.registerPlugin) {
 function triggerMeeting() {
   haveMet = true;
   // lock final positions roughly center bottom
-  const centerXLeft = (window.innerWidth / 2) - 120; // offset so two avatars flank the center
-  const centerXRight = (window.innerWidth / 2) + 20;
+  const vw = window.innerWidth;
+  const aw = avatarLeftContainer ? avatarLeftContainer.offsetWidth || 120 : 120;
+  const gapBetween = vw <= 420 ? 24 : vw <= 768 ? 48 : 120; // pixels between avatars
+
+  // compute left/right desired left coordinates
+  const centerXLeft = (vw / 2) - aw - (gapBetween / 2);
+  const centerXRight = (vw / 2) + (gapBetween / 2);
 
   // stop expression rotation
   if (avatarExprInterval) {
