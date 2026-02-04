@@ -282,6 +282,140 @@ if (typeof gsap !== "undefined") {
   });
 }
 
+// =======================
+// LIGHTBOX + ACCESSIBILITY ENHANCEMENTS
+// =======================
+(function(){
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Add aria-labels to like buttons
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    if (!btn.hasAttribute('aria-label')) btn.setAttribute('aria-label','Toggle like');
+  });
+
+  // Ensure images have useful alt text (fallback to figcaption)
+  document.querySelectorAll('.photo-frame').forEach(frame => {
+    const img = frame.querySelector('img');
+    const cap = frame.querySelector('figcaption');
+    if (img) {
+      const currentAlt = (img.getAttribute('alt') || '').trim();
+      if (!currentAlt || currentAlt.toLowerCase().startsWith('photo')) {
+        img.alt = cap ? cap.textContent.trim() : 'photo';
+      }
+    }
+    const vid = frame.querySelector('video');
+    if (vid && !vid.hasAttribute('preload')) vid.setAttribute('preload','metadata');
+  });
+
+  const frames = Array.from(document.querySelectorAll('.photo-frame'));
+  const lightbox = document.getElementById('lightbox');
+  const lbContent = lightbox && lightbox.querySelector('.lightbox-content');
+  const lbCaption = lightbox && lightbox.querySelector('.lightbox-caption');
+  const lbClose = lightbox && lightbox.querySelector('.lightbox-close');
+  const lbNext = lightbox && lightbox.querySelector('.lightbox-next');
+  const lbPrev = lightbox && lightbox.querySelector('.lightbox-prev');
+
+  let currentIndex = 0;
+
+  function openLightbox(index){
+    if (!lightbox) return;
+    currentIndex = index;
+    renderLightboxItem(index);
+    lightbox.classList.remove('hidden');
+    lightbox.setAttribute('aria-hidden','false');
+    // focus for accessibility
+    lbClose.focus();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox(){
+    if (!lightbox) return;
+    stopAnyMedia();
+    lightbox.classList.add('hidden');
+    lightbox.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+  }
+
+  function stopAnyMedia(){
+    const v = lbContent.querySelector('video');
+    if (v) { try { v.pause(); v.currentTime = 0; } catch(e){} }
+  }
+
+  function renderLightboxItem(index){
+    if (!lbContent) return;
+    lbContent.innerHTML = '';
+    const frame = frames[index];
+    if (!frame) return;
+    const cap = frame.querySelector('figcaption');
+    const img = frame.querySelector('img');
+    const vid = frame.querySelector('video');
+
+    if (img) {
+      const el = document.createElement('img');
+      // prefer data-src if present (lazy)
+      el.src = img.getAttribute('data-src') || img.src;
+      el.alt = img.alt || (cap ? cap.textContent.trim() : 'photo');
+      lbContent.appendChild(el);
+    } else if (vid) {
+      const video = document.createElement('video');
+      video.src = vid.querySelector('source') ? vid.querySelector('source').src : vid.src;
+      video.controls = true;
+      video.autoplay = true;
+      video.playsInline = true;
+      video.muted = false;
+      video.preload = 'metadata';
+      lbContent.appendChild(video);
+    }
+
+    if (lbCaption) lbCaption.textContent = cap ? cap.textContent.trim() : '';
+  }
+
+  function next(){
+    currentIndex = (currentIndex + 1) % frames.length;
+    renderLightboxItem(currentIndex);
+  }
+
+  function prev(){
+    currentIndex = (currentIndex - 1 + frames.length) % frames.length;
+    renderLightboxItem(currentIndex);
+  }
+
+  // attach click handlers to open lightbox
+  frames.forEach((frame, i) => {
+    const trigger = frame.querySelector('img') || frame.querySelector('video');
+    if (!trigger) return;
+    trigger.style.cursor = 'zoom-in';
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      openLightbox(i);
+    });
+    // keyboard support: Enter opens
+    trigger.setAttribute('tabindex','0');
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(i); }
+    });
+  });
+
+  // controls
+  if (lbClose) lbClose.addEventListener('click', closeLightbox);
+  if (lbNext) lbNext.addEventListener('click', next);
+  if (lbPrev) lbPrev.addEventListener('click', prev);
+
+  // click outside content to close
+  if (lightbox) lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  // keyboard nav
+  window.addEventListener('keydown', (e) => {
+    if (!lightbox || lightbox.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowRight') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+})();
+
 const reels = document.querySelectorAll(".reel");
 
 const observer = new IntersectionObserver(
@@ -320,6 +454,37 @@ const imgObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '200px 0px' });
 
 document.querySelectorAll('img[data-src]').forEach(img => imgObserver.observe(img));
+
+// Lazy-load video sources for .reel elements
+const videoObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const video = entry.target;
+      // find source children with data-src
+      const sources = video.querySelectorAll('source[data-src]');
+      sources.forEach(s => {
+        s.src = s.getAttribute('data-src');
+        s.removeAttribute('data-src');
+      });
+      // set preload to metadata for quick seekability
+      try { video.preload = 'metadata'; } catch (e) {}
+      // load the video element
+      try { video.load(); } catch (e) {}
+
+      // if marked data-autoplay, try to play (muted videos will autoplay)
+      if (video.dataset.autoplay !== undefined) {
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise.catch(() => {/* ignore autoplay failures */});
+        }
+      }
+
+      videoObserver.unobserve(video);
+    }
+  });
+}, { threshold: 0.25, rootMargin: '300px 0px' });
+
+document.querySelectorAll('video.reel').forEach(v => videoObserver.observe(v));
 
 
 // =======================
