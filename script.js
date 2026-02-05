@@ -146,6 +146,12 @@ function createConfettiPieces() {
 function candleOff() {
   if (!flame.classList.contains("off")) {
     flame.classList.add("off");
+    
+    // ADD BOUNCE TO CAKE WHEN BLOWN
+    const cake = document.querySelector(".cake");
+    if (cake) {
+      cake.style.animation = "cakeBounceEffect 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)";
+    }
 
     // ENHANCED CONFETTI PARTY POPPER
     createConfettiPieces();
@@ -170,7 +176,16 @@ if (blowBtn) {
 // -----------------------
 if (goStory) {
   goStory.addEventListener("click", () => {
-    window.location.href = "story.html";
+    // Add smooth exit transition
+    document.body.style.transition = "all 1s cubic-bezier(0.34, 1.56, 0.64, 1)";
+    document.body.style.opacity = "0";
+    document.body.style.filter = "blur(15px)";
+    document.body.style.transform = "scale(0.95)";
+    
+    // Navigate after transition
+    setTimeout(() => {
+      window.location.href = "story.html";
+    }, 500);
   });
 }
 

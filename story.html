@@ -11,6 +11,40 @@
 
   <!-- small inline styles for the featured frame + like buttons -->
   <style>
+    /* PAGE ENTRANCE ANIMATION */
+    body.story-page-enter {
+      animation: pageEnter 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    
+    @keyframes pageEnter {
+      0% {
+        opacity: 0;
+        filter: blur(15px) brightness(1.2);
+        transform: scale(0.95) rotateX(45deg);
+      }
+      50% {
+        filter: blur(8px) brightness(1.1);
+      }
+      100% {
+        opacity: 1;
+        filter: blur(0) brightness(1);
+        transform: scale(1) rotateX(0deg);
+      }
+    }
+    
+    /* Beautiful Background Gradient */
+    body.story-page {
+      background: linear-gradient(135deg, #fff5f7 0%, #ffe8ec 25%, #fff0f5 50%, #ffe8f0 75%, #fff5f8 100%);
+      background-size: 400% 400%;
+      animation: gentleGradient 20s ease infinite;
+    }
+    
+    @keyframes gentleGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
     .feature {
       padding: 40px 20px;
       display: flex;
@@ -25,9 +59,27 @@
       background: #fff;
       padding: 16px 16px 24px;
       border-radius: 14px;
-      box-shadow: 0 18px 40px rgba(0,0,0,0.12);
+      box-shadow: 0 20px 50px rgba(255, 105, 157, 0.2), 0 0 60px rgba(255, 105, 157, 0.1);
       transform: rotate(var(--rot, -2deg));
       position: relative;
+      animation: floatIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    
+    .feature-frame:hover {
+      transform: rotate(var(--rot, -2deg)) scale(1.05) translateY(-10px);
+      box-shadow: 0 30px 70px rgba(255, 105, 157, 0.3), 0 0 80px rgba(255, 105, 157, 0.15);
+    }
+    
+    @keyframes floatIn {
+      0% {
+        opacity: 0;
+        transform: rotate(var(--rot, -2deg)) translateY(80px) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: rotate(var(--rot, -2deg));
+      }
     }
 
     .feature-frame img {
@@ -46,7 +98,8 @@
       transform: translateX(-50%) rotate(-6deg);
       width: 70px;
       height: 22px;
-      background: linear-gradient(90deg, #ffd6d6 0%, #ffecec 100%);
+      background: linear-gradient(90deg, #FF69B4 0%, #FFB6C1 100%);
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.4);
       border-radius: 4px;
       box-shadow: 0 3px 8px rgba(0,0,0,0.08);
       z-index: 4;
@@ -56,7 +109,9 @@
       font-family: 'Playfair Display', serif;
       font-size: 1.05rem;
       margin-top: 10px;
-      color: #b41f3a;
+      color: #d62946;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     .feature-text {
@@ -64,10 +119,22 @@
       margin: 0 auto;
       font-family: 'Poppins', sans-serif;
       color: #333;
-      background: rgba(255,255,255,0.6);
+      background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255, 240, 245, 0.95));
       padding: 14px 18px;
       border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+      box-shadow: 0 10px 30px rgba(255, 105, 157, 0.15), inset 0 1px 2px rgba(255,255,255,0.5);
+      animation: fadeInUp 0.8s ease-out 0.2s backwards;
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .mid-message {
@@ -78,8 +145,11 @@
     .mid-message p {
       font-family: 'Playfair Display', serif;
       font-size: 1.25rem;
-      color: #7a1f36;
       margin: 0;
+      color: #b41f3a;
+      font-weight: 600;
+      letter-spacing: 1px;
+      animation: fadeInUp 0.8s ease-out 0.3s backwards;
     }
 
     /* merged media grid */
@@ -99,10 +169,22 @@
       background: #fff;
       padding: 12px 12px 18px;
       border-radius: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+      box-shadow: 0 15px 40px rgba(255, 105, 157, 0.15), 0 0 40px rgba(255, 105, 157, 0.08);
       transform: rotate(var(--rot, 0deg));
       transition: transform 300ms ease, box-shadow 300ms ease;
       overflow: visible;
+      animation: scaleInFrame 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    }
+    
+    @keyframes scaleInFrame {
+      0% {
+        opacity: 0;
+        transform: rotate(var(--rot, 0deg)) scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        transform: rotate(var(--rot, 0deg));
+      }
     }
 
     .photo-frame img,
@@ -118,9 +200,10 @@
     .photo-frame figcaption {
       font-family: 'Poppins', sans-serif;
       font-size: 0.9rem;
-      color: #333;
+      color: #555;
       margin-top: 10px;
       text-align: left;
+      font-weight: 500;
     }
 
     /* like button inside frames */
@@ -133,7 +216,7 @@
       height: 34px;
       border-radius: 50%;
       border: none;
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,0.98);
       box-shadow: 0 3px 8px rgba(0,0,0,0.12);
       font-size: 16px;
       line-height: 1;
@@ -142,18 +225,28 @@
       align-items: center;
       justify-content: center;
       color: #b41f3a;
+      transition: all 0.3s ease;
     }
-    .like-btn.liked { background: #ffe9eb; color: #ff2b55; }
+    .like-btn.liked { 
+      background: #FFB6C1; 
+      color: #d62946;
+      transform: scale(1.15);
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+    }
+    .like-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 5px 12px rgba(255, 105, 180, 0.3);
+    }
 
     .inline-note {
       width: 100%;
       max-width: 760px;
       margin: 28px auto 32px;
       padding: 20px 24px;
-      background: linear-gradient(135deg, rgba(255, 182, 193, 0.15), rgba(255, 192, 203, 0.1));
+      background: linear-gradient(135deg, rgba(255, 105, 180, 0.08), rgba(255, 182, 193, 0.12));
       border: 1px solid rgba(255, 105, 157, 0.2);
       border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.06), inset 0 1px 2px rgba(255,255,255,0.5);
+      box-shadow: 0 8px 24px rgba(255, 105, 157, 0.1), inset 0 1px 2px rgba(255,255,255,0.8);
       font-family: 'Playfair Display', serif;
       font-size: 1.1rem;
       color: #7a1f36;
@@ -185,7 +278,19 @@
   <script src="https://unpkg.com/@studio-freight/lenis"></script>
 </head>
 
-<body>
+<body class="story-page">
+  <script>
+    // Mind-blowing entrance animation
+    document.addEventListener('DOMContentLoaded', function() {
+      document.body.classList.add('story-page-enter');
+      
+      // Stagger animations for photos
+      const photoFrames = document.querySelectorAll('.photo-frame');
+      photoFrames.forEach((frame, index) => {
+        frame.style.animationDelay = (index * 0.1) + 's';
+      });
+    });
+  </script>
     
   <!-- HERO SECTION -->
   <section class="hero section">

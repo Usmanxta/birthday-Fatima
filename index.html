@@ -5,54 +5,198 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>uhh hi fatima</title>
 
-  <!-- goofy font on purpose -->
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+  <!-- goofy fonts on purpose -->
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka+One&family=Righteous&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="style.css" />
+  
+  <style>
+    /* GOOFY INDEX PAGE STYLES */
+    body.goofy-page {
+      background: linear-gradient(45deg, #FFD700, #FF69B4, #00CED1, #32CD32, #FF6347);
+      background-size: 400% 400%;
+      animation: rainbowShift 15s ease infinite;
+      font-family: 'Comic Neue', cursive;
+    }
+    
+    @keyframes rainbowShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .container.goofy-container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    
+    .text.goofy-text {
+      font-size: 24px;
+      line-height: 1.8;
+      font-weight: bold;
+      text-shadow: 2px 2px 0px #FF1493, 4px 4px 0px #00CED1;
+      animation: wiggle 2s infinite;
+      transform-origin: center;
+    }
+    
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(-1deg) translateX(0); }
+      25% { transform: rotate(1.5deg) translateX(-2px); }
+      50% { transform: rotate(-1.5deg) translateX(2px); }
+      75% { transform: rotate(1deg) translateX(-1px); }
+    }
+    
+    .intro-box.goofy-box {
+      background: linear-gradient(135deg, #FFE5E5 0%, #E5F7FF 50%, #FFE5F7 100%);
+      padding: 30px;
+      border-radius: 20px;
+      border: 4px dashed #FF1493;
+      margin: 30px 0;
+      box-shadow: 0 10px 30px rgba(255, 20, 147, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.5);
+      transform: rotate(-2deg);
+      animation: bounce 1.5s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: rotate(-2deg) translateY(0); }
+      50% { transform: rotate(-2deg) translateY(-10px); }
+    }
+    
+    .intro-box p.goofy-intro {
+      font-size: 20px;
+      font-weight: bold;
+      color: #FF1493;
+      text-shadow: 2px 2px 0px #FFD700;
+      animation: spin 3s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .intro-box label.goofy-label {
+      display: block;
+      margin: 15px 0;
+      padding: 12px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 10px;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+      animation: slideIn 0.6s ease;
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    .intro-box label.goofy-label:hover {
+      background: #FFD700;
+      transform: scale(1.05) rotate(2deg);
+      border: 2px solid #FF1493;
+      box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+    }
+    
+    .intro-box label input[type="radio"]:checked + span {
+      color: #FF1493;
+      font-weight: bold;
+    }
+    
+    button.goofy-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 24px;
+      padding: 15px 40px;
+      margin: 30px 0;
+      background: linear-gradient(135deg, #FF1493, #FF69B4);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(255, 20, 147, 0.4);
+      transition: all 0.3s;
+      animation: pulse 1.5s infinite;
+      text-shadow: 1px 1px 0px #C71585;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    
+    button.goofy-btn:hover:not(:disabled) {
+      transform: scale(1.15) rotate(3deg);
+      box-shadow: 0 12px 30px rgba(255, 20, 147, 0.6);
+    }
+    
+    button.goofy-btn:disabled {
+      opacity: 0.4;
+      animation: shake 0.5s infinite;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+  </style>
 </head>
-<body>
+<body class="goofy-page">
 
-  <div class="container">
+  <div class="container goofy-container">
 
-    <p class="text">
-      hello fatima!<br><br>
-      umm so… i am not a very good programmer<br>
-      but i did take some time to make this little webpage for you<br><br>
-      so i really hope you like it 🥲
+    <p class="text goofy-text">
+      hello fatima! 🎪<br><br>
+      umm so… i am NOT a very good programmer<br>
+      but i DID take some time to make this SILLY webpage for you<br><br>
+      so i REALLY hope you like it!!! 🥲✨
     </p>
 
 
-<audio id="birthdayAudio" src="birthday.mp3"></audio>
-
 
 <audio id="birthdayAudio" src="birthday.mp3"></audio>
+
 <!-- HEADPHONE CHECK -->
-<div class="intro-box">
-  <p id="responseText">
-    before we begin… do you have your headphones on? 🎧
+<div class="intro-box goofy-box">
+  <p id="responseText" class="goofy-intro">
+    before we begin… 🎧<br>
+    do you have your headphones ON?
   </p>
 
-  <label>
+  <label class="goofy-label">
     <input type="radio" name="headphones" value="yes">
-    of course i have it on dummy
-  </label><br>
-
-  <label>
-    <input type="radio" name="headphones" value="no">
-    come on man i dont need it
+    <span>of course i have it on dummy! 😎</span>
   </label>
 
-  <br><br>
-  <button id="startBtn" disabled>start 🎂</button>
+  <label class="goofy-label">
+    <input type="radio" name="headphones" value="no">
+    <span>come on man i dont need it 🙄</span>
+  </label>
+
+  <br>
+  <button id="startBtn" class="goofy-btn" disabled>start 🎂 LET'S GO!</button>
 </div>
 
 <!-- CAKE SECTION -->
 <div class="cake-container hidden">
   <div class="cake-wrapper">
     <div class="cake">
+      <!-- Layered cake with frosting decoration -->
+      <div class="cake-layer cake-layer-bottom"></div>
+      <div class="cake-layer cake-layer-middle"></div>
+      <div class="cake-layer cake-layer-top"></div>
       <div class="cake-frosting"></div>
+      <!-- Decorative frosting swirls -->
+      <div class="frosting-swirl"></div>
       <div class="candle">
-        <div class="flame" id="flame"></div>
+        <div class="flame" id="flame">
+          <div class="flame-inner"></div>
+          <div class="flame-glow"></div>
+        </div>
       </div>
     </div>
   </div>
